@@ -1,0 +1,30 @@
+Name: Hongda Lin
+Date: 31/3/2021
+
+I certify that I completed all of the work myself with no aid from anyone aside from the instructor or the undergraduate graders.
+
+Part 1: Encryption
+
+Q1: Honestly, It took so much time for me to read and understand my old Part3. I know I put everything into a pointer and use a macro to represent constant. I also do a lot of pointer arithmetics. So it's definitely harder for me to understand Part3 than my Part1.
+
+Q2: Yes, it's important to have sufficiently readable code. The first reason is it's more understandable for viewers. The second reason is it's easier to debug and maintain. The third reason is it's more efficient because you could get rid of redundant code.
+
+Q3: One key difference between my lab2 and lab5 is the code in lab2 is easier to understand. This happens because many registers in lab5 act the same functioning where I could achieve by fewer variables in C. For example, I need to save the base pointer and keep tracking with the stack pointer. I need to be careful about the instruction "call" might change the caller saved register and I have to manually save it if I don't want it to be changed. I need to use some special registers such as %rdi and %rsi as the first and second parameters for writing conventions. I need to moving data from the register to register and manipulate the register size as needed. All in all, the less abstraction you get and the more work you need to do.
+
+Q4: Yes, I create three functions for Encryption in assembly base on my lab2 code. They are printRestCharacter, encryptor, and modifierEncr. In my main function, I use a callee saved register %rbx to store the address of myArr. When I call function encryptor, I pass %rbx to %rdi as the first parameter and I know that %rbx will not be changed after "call" instruction and I don't care to save %rdi. So in encryptor, I pass %rdi to callee saved register %r14 because I need to call modifierEncr in the loop, which I don't it to be changed. I usually use %r12d as i for looping and use %rdx as the 64 bits extension of %r12d when I need to access the character. I take the 8th character and stored it in %r13b because I don't want it to be changed. I use %sil to store it as temp and get the character 1-7 one by one stored in %dil. And I call function modifierEncr, which proceed the encryption by bit manipulation in %dil and %sil. The last part is function printRestCharacter, which performs the same as above.
+
+Q5: Yes, both Encryption and Decryption works the same in lab2.
+
+Q6: It's more natural to manipulate bits in C. First, in assembly, the biggest problem is the size of the register. I could use %dil to store my character and use %edi as the ASCII value of this character. However, when I am writing decryption, I make a mistake using %edi for bit manipulation, which turns out that I am not doing any modification to my encrypted character because I only want the last byte to be modified correctly. I need to first left shift, cut the last byte in %edi to %sil, and extend %sil to %esi to do a right shift. However, in C, we just need two lines to manipulate the character by bit shifting. So, it's more natural to manipulate bits in C.
+
+Part2: Debugging
+
+Q1: When I try to break main, the gdb shows error message "Function "main" not defined." I think the reason is there is no such thing like "function" in assembly than we have in C. Everything is transfer and manipulated using registers and "main" in assembly is just a label that mark the main function we have in C is starting from here.
+
+Q2: Use: break encryption.s:33 (Breakpoint 1 at 0x60104f: file encryption.s, line 33.)
+
+Q3: Use: tui reg general. A table appears on the top of the terminal called "Register group: general". All the registors and their address and value are shows on this table.
+
+Q4: Yes, we can step through the program line-by-line by setting a break point. For example, I could set a break point to track what is currently in %rdx (i) for looping. 
+
+Q5: Yes, I tried to use step and I actaully get into putchar.c and observe the registers highlighted in Register table. I think it actually shows how putchar is working and what registers are changing currently.
